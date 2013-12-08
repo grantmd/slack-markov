@@ -4,6 +4,7 @@ package main
 // codewalk: http://golang.org/doc/codewalk/markov/
 
 import (
+	"fmt"
 	"log"
 	"math/rand"
 	"strings"
@@ -47,17 +48,22 @@ func NewChain(prefixLen int) *Chain {
 }
 
 // Write parses the bytes into prefixes and suffixes that are stored in Chain.
-func (c *Chain) Write(s string) error {
+func (c *Chain) Write(in string) (int, error) {
+	sr := strings.NewReader(in)
 	p := make(Prefix, c.prefixLen)
-
-	key := p.String()
-	c.mu.Lock()
-	log.Printf("Adding '%s' for key '%s'", s, key)
-	c.chain[key] = append(c.chain[key], s)
-	c.mu.Unlock()
-	p.Shift(s)
-
-	return nil
+	for {
+		var s string
+		if _, err := fmt.Fscan(sr, &s); err != nil {
+			break
+		}
+		key := p.String()
+		log.Printf("Adding '%s' for key '%s'", s, key)
+		c.mu.Lock()
+		c.chain[key] = append(c.chain[key], s)
+		c.mu.Unlock()
+		p.Shift(s)
+	}
+	return len(in), nil
 }
 
 // Generate returns a string of at most n words generated from Chain.
