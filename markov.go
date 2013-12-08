@@ -38,7 +38,7 @@ func (p Prefix) Shift(word string) {
 // A prefix is a string of prefixLen words joined with spaces.
 // A suffix is a single word. A prefix can have multiple suffixes.
 type Chain struct {
-	chain     map[string][]string
+	Chain     map[string][]string
 	prefixLen int
 	mu        sync.Mutex
 }
@@ -46,7 +46,7 @@ type Chain struct {
 // NewChain returns a new Chain with prefixes of prefixLen words.
 func NewChain(prefixLen int) *Chain {
 	return &Chain{
-		chain:     make(map[string][]string),
+		Chain:     make(map[string][]string),
 		prefixLen: prefixLen,
 	}
 }
@@ -62,7 +62,7 @@ func (c *Chain) Write(in string) (int, error) {
 		}
 		key := p.String()
 		c.mu.Lock()
-		c.chain[key] = append(c.chain[key], s)
+		c.Chain[key] = append(c.Chain[key], s)
 		c.mu.Unlock()
 		p.Shift(s)
 	}
@@ -76,7 +76,7 @@ func (c *Chain) Generate(n int) string {
 	p := make(Prefix, c.prefixLen)
 	var words []string
 	for i := 0; i < n; i++ {
-		choices := c.chain[p.String()]
+		choices := c.Chain[p.String()]
 		if len(choices) == 0 {
 			break
 		}
@@ -102,8 +102,38 @@ func (c *Chain) Save(fileName string) error {
 	}()
 
 	// Create an encoder and dump to it
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	enc := gob.NewEncoder(fo)
 	err = enc.Encode(c)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Load the chain from a file
+func (c *Chain) Load(fileName string) error {
+	// Open the file for reading
+	fi, err := os.Open(fileName)
+	if err != nil {
+		return err
+	}
+	// close fi on exit and check for its returned error
+	defer func() {
+		if err := fi.Close(); err != nil {
+			panic(err)
+		}
+	}()
+
+	// Create a decoder and read from it
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	dec := gob.NewDecoder(fi)
+	err = dec.Decode(c)
 	if err != nil {
 		return err
 	}

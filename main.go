@@ -50,6 +50,11 @@ func main() {
 		}
 	} else {
 		// Rebuild the markov chain from state
+		err := markovChain.Load(stateFile)
+		if err != nil {
+			//log.Fatal(err)
+			log.Printf("Could not load from %s. This may be expected.", stateFile)
+		}
 	}
 
 	// Start the webserver

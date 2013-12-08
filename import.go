@@ -42,7 +42,10 @@ func StartImport(dir *string) (err error) {
 		}
 
 		// Write the state file
-		markovChain.Save(stateFile)
+		err = markovChain.Save(stateFile)
+		if err != nil {
+			log.Fatal(err)
+		}
 		log.Print("Import complete")
 	}()
 
