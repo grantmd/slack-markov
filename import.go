@@ -37,13 +37,12 @@ func StartImport(dir *string) (err error) {
 	go func() {
 		for _, file := range contents {
 			if file.IsDir() {
-				log.Printf("Directory: %s", file.Name())
 				ImportDir(*dir + "/" + file.Name())
-			} else {
-				log.Printf("File: %s", file.Name())
 			}
 		}
 
+		// Write the state file
+		markovChain.Save(stateFile)
 		log.Print("Import complete")
 	}()
 
@@ -59,7 +58,6 @@ func ImportDir(dir string) {
 
 	for _, file := range contents {
 		if !file.IsDir() {
-			log.Printf("File: %s", file.Name())
 			contents, err := ioutil.ReadFile(dir + "/" + file.Name())
 			if err != nil {
 				log.Fatal(err)

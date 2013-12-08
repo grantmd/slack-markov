@@ -21,6 +21,9 @@ func init() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		log.Print("Handling incoming request")
 		markovChain.Write(r.PostFormValue("text"))
+		go func() {
+			markovChain.Save(stateFile)
+		}()
 
 		var response WebhookResponse
 		response.Text = markovChain.Generate(numWords)

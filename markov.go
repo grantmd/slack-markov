@@ -7,8 +7,10 @@ package main
 // with a webserver and to save/load state
 
 import (
+	"encoding/gob"
 	"fmt"
 	"math/rand"
+	"os"
 	"strings"
 	"sync"
 	"time"
@@ -83,4 +85,28 @@ func (c *Chain) Generate(n int) string {
 		p.Shift(next)
 	}
 	return strings.Join(words, " ")
+}
+
+// Save the chain to a file
+func (c *Chain) Save(fileName string) error {
+	// Open the file for writing
+	fo, err := os.Create(fileName)
+	if err != nil {
+		return err
+	}
+	// close fo on exit and check for its returned error
+	defer func() {
+		if err := fo.Close(); err != nil {
+			panic(err)
+		}
+	}()
+
+	// Create an encoder and dump to it
+	enc := gob.NewEncoder(fo)
+	err = enc.Encode(c)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

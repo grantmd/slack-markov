@@ -14,6 +14,7 @@ var (
 	httpPort  int
 	numWords  int
 	prefixLen int
+	stateFile string
 
 	markovChain *Chain
 )
@@ -28,6 +29,7 @@ func main() {
 	flag.IntVar(&httpPort, "port", 8000, "The HTTP port on which to listen")
 	flag.IntVar(&numWords, "words", 100, "Maximum number of words in the output")
 	flag.IntVar(&prefixLen, "prefix", 2, "Prefix length in words")
+	flag.StringVar(&stateFile, "stateFile", "state", "File to use for maintaining our markov chain state")
 
 	var importDir = flag.String("importDir", "", "The directory of a Slack export")
 
