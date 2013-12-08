@@ -4,12 +4,16 @@ package main
 // codewalk: http://golang.org/doc/codewalk/markov/
 
 import (
-	"bytes"
-	"fmt"
+	"log"
 	"math/rand"
 	"strings"
 	"sync"
+	"time"
 )
+
+func init() {
+	rand.Seed(time.Now().UnixNano()) // Seed the random number generator.
+}
 
 // Prefix is a Markov chain prefix of one or more words.
 type Prefix []string
@@ -43,21 +47,17 @@ func NewChain(prefixLen int) *Chain {
 }
 
 // Write parses the bytes into prefixes and suffixes that are stored in Chain.
-func (c *Chain) Write(b []byte) (int, error) {
-	br := bytes.NewReader(b)
+func (c *Chain) Write(s string) error {
 	p := make(Prefix, c.prefixLen)
-	for {
-		var s string
-		if _, err := fmt.Fscan(br, &s); err != nil {
-			break
-		}
-		key := p.String()
-		c.mu.Lock()
-		c.chain[key] = append(c.chain[key], s)
-		c.mu.Unlock()
-		p.Shift(s)
-	}
-	return len(b), nil
+
+	key := p.String()
+	c.mu.Lock()
+	log.Printf("Adding '%s' for key '%s'", s, key)
+	c.chain[key] = append(c.chain[key], s)
+	c.mu.Unlock()
+	p.Shift(s)
+
+	return nil
 }
 
 // Generate returns a string of at most n words generated from Chain.

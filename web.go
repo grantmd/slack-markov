@@ -7,8 +7,6 @@ package main
 // https://my.slack.com/services/new/outgoing-webhook
 
 import (
-	"fmt"
-	"html"
 	"log"
 	"net/http"
 	"strconv"
@@ -16,7 +14,9 @@ import (
 
 func init() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+		log.Print("Handling incoming request")
+		markovChain.Write(r.PostFormValue("text"))
+		w.Write([]byte(markovChain.Generate(numWords)))
 	})
 }
 

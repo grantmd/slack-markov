@@ -10,7 +10,11 @@ import (
 )
 
 var (
-	httpPort int
+	httpPort  int
+	numWords  int
+	prefixLen int
+
+	markovChain *Chain
 )
 
 func main() {
@@ -21,6 +25,8 @@ func main() {
 	}
 
 	flag.IntVar(&httpPort, "port", 8000, "The HTTP port on which to listen")
+	flag.IntVar(&numWords, "words", 100, "Maximum number of words in the output")
+	flag.IntVar(&prefixLen, "prefix", 2, "Prefix length in words")
 
 	flag.Parse()
 
@@ -28,6 +34,9 @@ func main() {
 		flag.Usage()
 		os.Exit(2)
 	}
+
+	// Rebuild the markov chain from state
+	markovChain = NewChain(prefixLen) // Initialize a new Chain.
 
 	// Start the webserver
 	StartServer(httpPort)
