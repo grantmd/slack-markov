@@ -8,7 +8,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"math/rand"
 	"strings"
 	"sync"
@@ -60,7 +59,6 @@ func (c *Chain) Write(in string) (int, error) {
 			break
 		}
 		key := p.String()
-		log.Printf("Adding '%s' for key '%s'", s, key)
 		c.mu.Lock()
 		c.chain[key] = append(c.chain[key], s)
 		c.mu.Unlock()
