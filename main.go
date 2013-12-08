@@ -6,6 +6,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -28,6 +29,8 @@ func main() {
 	flag.IntVar(&numWords, "words", 100, "Maximum number of words in the output")
 	flag.IntVar(&prefixLen, "prefix", 2, "Prefix length in words")
 
+	var importDir = flag.String("importDir", "", "The directory of a Slack export")
+
 	flag.Parse()
 
 	if httpPort == 0 {
@@ -35,8 +38,17 @@ func main() {
 		os.Exit(2)
 	}
 
-	// Rebuild the markov chain from state
 	markovChain = NewChain(prefixLen) // Initialize a new Chain.
+
+	// Import into the chain
+	if *importDir != "" {
+		err := StartImport(importDir)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		// Rebuild the markov chain from state
+	}
 
 	// Start the webserver
 	StartServer(httpPort)
