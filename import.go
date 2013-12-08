@@ -4,11 +4,20 @@ package main
 // https://my.slack.com/services/export
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"log"
-	"time"
 )
 
+type Message struct {
+	Type string
+	User string
+	Text string
+	TS   string
+}
+
+// Start an import from a slack export directory
+// Does some basic error checking then imports the data in the background
 func StartImport(dir *string) (err error) {
 	log.Printf("Starting import from %s", *dir)
 
@@ -24,10 +33,9 @@ func StartImport(dir *string) (err error) {
 		return err
 	}
 
-	// Looks good, import each directory in a goroutine
+	// Looks good, import each directory/channel in a goroutine
 	go func() {
 		for _, file := range contents {
-			time.Sleep(5 * time.Second)
 			if file.IsDir() {
 				log.Printf("Directory: %s", file.Name())
 				ImportDir(*dir + "/" + file.Name())
@@ -35,11 +43,38 @@ func StartImport(dir *string) (err error) {
 				log.Printf("File: %s", file.Name())
 			}
 		}
+
+		log.Print("Import complete")
 	}()
 
 	return nil
 }
 
+// Handles the import of a channel/directory
 func ImportDir(dir string) {
+	contents, err := ioutil.ReadDir(dir)
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	for _, file := range contents {
+		if !file.IsDir() {
+			log.Printf("File: %s", file.Name())
+			contents, err := ioutil.ReadFile(dir + "/" + file.Name())
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			// parse into json
+			var messages []Message
+			err = json.Unmarshal(contents, &messages)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			for _, message := range messages {
+				markovChain.Write(message.Text)
+			}
+		}
+	}
 }
