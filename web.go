@@ -20,8 +20,9 @@ type WebhookResponse struct {
 
 func init() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		log.Print("Handling incoming request")
-		markovChain.Write(r.PostFormValue("text"))
+		incomingText := r.PostFormValue("text")
+		log.Printf("Handling incoming request: %s", incomingText)
+		markovChain.Write(incomingText)
 		go func() {
 			markovChain.Save(stateFile)
 		}()
@@ -29,6 +30,7 @@ func init() {
 		if rand.Intn(100) <= responseChance {
 			var response WebhookResponse
 			response.Text = markovChain.Generate(numWords)
+			log.Printf("Sending response: %s", response.Text)
 
 			b, err := json.Marshal(response)
 			if err != nil {
