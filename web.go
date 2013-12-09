@@ -9,6 +9,7 @@ package main
 import (
 	"encoding/json"
 	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
 )
@@ -25,15 +26,17 @@ func init() {
 			markovChain.Save(stateFile)
 		}()
 
-		var response WebhookResponse
-		response.Text = markovChain.Generate(numWords)
+		if rand.Intn(100) <= responseChance {
+			var response WebhookResponse
+			response.Text = markovChain.Generate(numWords)
 
-		b, err := json.Marshal(response)
-		if err != nil {
-			log.Fatal(err)
+			b, err := json.Marshal(response)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			w.Write(b)
 		}
-
-		w.Write(b)
 	})
 }
 

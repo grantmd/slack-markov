@@ -13,12 +13,7 @@ import (
 	"os"
 	"strings"
 	"sync"
-	"time"
 )
-
-func init() {
-	rand.Seed(time.Now().UnixNano()) // Seed the random number generator.
-}
 
 // Prefix is a Markov chain prefix of one or more words.
 type Prefix []string

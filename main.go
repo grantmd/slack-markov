@@ -7,17 +7,24 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
+	"time"
 )
 
 var (
-	httpPort  int
-	numWords  int
-	prefixLen int
-	stateFile string
+	httpPort       int
+	numWords       int
+	prefixLen      int
+	stateFile      string
+	responseChance int
 
 	markovChain *Chain
 )
+
+func init() {
+	rand.Seed(time.Now().UnixNano()) // Seed the random number generator.
+}
 
 func main() {
 	// Parse command-line options
@@ -29,6 +36,7 @@ func main() {
 	flag.IntVar(&httpPort, "port", 8000, "The HTTP port on which to listen")
 	flag.IntVar(&numWords, "words", 100, "Maximum number of words in the output")
 	flag.IntVar(&prefixLen, "prefix", 2, "Prefix length in words")
+	flag.IntVar(&responseChance, "responseChance", 25, "Percent chance to generate a response on each request")
 	flag.StringVar(&stateFile, "stateFile", "state", "File to use for maintaining our markov chain state")
 
 	var importDir = flag.String("importDir", "", "The directory of a Slack export")
@@ -53,7 +61,9 @@ func main() {
 		err := markovChain.Load(stateFile)
 		if err != nil {
 			//log.Fatal(err)
-			log.Printf("Could not load from %s. This may be expected.", stateFile)
+			log.Printf("Could not load from '%s'. This may be expected.", stateFile)
+		} else {
+			log.Printf("Loaded previous state from '%s'.", stateFile)
 		}
 	}
 
