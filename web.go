@@ -15,7 +15,8 @@ import (
 )
 
 type WebhookResponse struct {
-	Text string `json:"text"`
+	Username string `json:"username"`
+	Text     string `json:"text"`
 }
 
 func init() {
@@ -29,6 +30,7 @@ func init() {
 
 		if rand.Intn(100) <= responseChance {
 			var response WebhookResponse
+			response.Username = botUsername
 			response.Text = markovChain.Generate(numWords)
 			log.Printf("Sending response: %s", response.Text)
 

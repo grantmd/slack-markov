@@ -18,6 +18,7 @@ var (
 	prefixLen      int
 	stateFile      string
 	responseChance int
+	botUsername    string
 
 	markovChain *Chain
 )
@@ -38,6 +39,7 @@ func main() {
 	flag.IntVar(&prefixLen, "prefix", 2, "Prefix length in words")
 	flag.IntVar(&responseChance, "responseChance", 25, "Percent chance to generate a response on each request")
 	flag.StringVar(&stateFile, "stateFile", "state", "File to use for maintaining our markov chain state")
+	flag.StringVar(&botUsername, "botUsername", "markov-bot", "The name of the bot when it speaks")
 
 	var importDir = flag.String("importDir", "", "The directory of a Slack export")
 	var importChan = flag.String("importChan", "", "Optional channel to limit the import to")
