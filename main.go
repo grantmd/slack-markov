@@ -37,7 +37,7 @@ func main() {
 	flag.IntVar(&httpPort, "port", 8000, "The HTTP port on which to listen")
 	flag.IntVar(&numWords, "words", 100, "Maximum number of words in the output")
 	flag.IntVar(&prefixLen, "prefix", 2, "Prefix length in words")
-	flag.IntVar(&responseChance, "responseChance", 25, "Percent chance to generate a response on each request")
+	flag.IntVar(&responseChance, "responseChance", 10, "Percent chance to generate a response on each request")
 	flag.StringVar(&stateFile, "stateFile", "state", "File to use for maintaining our markov chain state")
 	flag.StringVar(&botUsername, "botUsername", "markov-bot", "The name of the bot when it speaks")
 
