@@ -18,7 +18,7 @@ type Message struct {
 
 // Start an import from a slack export directory
 // Does some basic error checking then imports the data in the background
-func StartImport(dir *string) (err error) {
+func StartImport(dir *string, channel *string) (err error) {
 	log.Printf("Starting import from %s", *dir)
 
 	// Does this directory exist? Get its contents
@@ -37,7 +37,9 @@ func StartImport(dir *string) (err error) {
 	go func() {
 		for _, file := range contents {
 			if file.IsDir() {
-				ImportDir(*dir + "/" + file.Name())
+				if *channel == "" || *channel == file.Name() {
+					ImportDir(*dir + "/" + file.Name())
+				}
 			}
 		}
 

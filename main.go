@@ -40,6 +40,7 @@ func main() {
 	flag.StringVar(&stateFile, "stateFile", "state", "File to use for maintaining our markov chain state")
 
 	var importDir = flag.String("importDir", "", "The directory of a Slack export")
+	var importChan = flag.String("importChan", "", "Optional channel to limit the import to")
 
 	flag.Parse()
 
@@ -52,7 +53,7 @@ func main() {
 
 	// Import into the chain
 	if *importDir != "" {
-		err := StartImport(importDir)
+		err := StartImport(importDir, importChan)
 		if err != nil {
 			log.Fatal(err)
 		}
