@@ -12,6 +12,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -29,7 +30,7 @@ func init() {
 			markovChain.Save(stateFile)
 		}()
 
-		if rand.Intn(100) <= responseChance {
+		if rand.Intn(100) <= responseChance || strings.HasPrefix(incomingText, botUsername) {
 			var response WebhookResponse
 			response.Username = botUsername
 			response.Text = markovChain.Generate(numWords)
