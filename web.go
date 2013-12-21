@@ -12,6 +12,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type WebhookResponse struct {
@@ -39,6 +40,7 @@ func init() {
 				log.Fatal(err)
 			}
 
+			time.Sleep(5 * time.Second)
 			w.Write(b)
 		}
 	})
