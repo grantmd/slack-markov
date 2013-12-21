@@ -24,25 +24,27 @@ type WebhookResponse struct {
 func init() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		incomingText := r.PostFormValue("text")
-		log.Printf("Handling incoming request: %s", incomingText)
-		markovChain.Write(incomingText)
-		go func() {
-			markovChain.Save(stateFile)
-		}()
+		if incomingText != "" {
+			log.Printf("Handling incoming request: %s", incomingText)
+			markovChain.Write(incomingText)
+			go func() {
+				markovChain.Save(stateFile)
+			}()
 
-		if rand.Intn(100) <= responseChance || strings.HasPrefix(incomingText, botUsername) {
-			var response WebhookResponse
-			response.Username = botUsername
-			response.Text = markovChain.Generate(numWords)
-			log.Printf("Sending response: %s", response.Text)
+			if rand.Intn(100) <= responseChance || strings.HasPrefix(incomingText, botUsername) {
+				var response WebhookResponse
+				response.Username = botUsername
+				response.Text = markovChain.Generate(numWords)
+				log.Printf("Sending response: %s", response.Text)
 
-			b, err := json.Marshal(response)
-			if err != nil {
-				log.Fatal(err)
+				b, err := json.Marshal(response)
+				if err != nil {
+					log.Fatal(err)
+				}
+
+				time.Sleep(5 * time.Second)
+				w.Write(b)
 			}
-
-			time.Sleep(5 * time.Second)
-			w.Write(b)
 		}
 	})
 }
