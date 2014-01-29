@@ -24,7 +24,7 @@ type WebhookResponse struct {
 func init() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		incomingText := r.PostFormValue("text")
-		if incomingText != "" {
+		if incomingText != "" && r.PostFormValue("user_id") != "" {
 			log.Printf("Handling incoming request: %s", incomingText)
 			markovChain.Write(incomingText)
 			go func() {
