@@ -44,6 +44,10 @@ func init() {
 
 				time.Sleep(5 * time.Second)
 				w.Write(b)
+
+				if twitterClient != nil {
+					twitterClient.Post(response.Text)
+				}
 			}
 		}
 	})

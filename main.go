@@ -20,6 +20,12 @@ var (
 	responseChance int
 	botUsername    string
 
+	twitterConsumerKey       string
+	twitterConsumerSecret    string
+	twitterAccessToken       string
+	twitterAccessTokenSecret string
+	twitterClient            *Twitter
+
 	markovChain *Chain
 )
 
@@ -40,6 +46,11 @@ func main() {
 	flag.IntVar(&responseChance, "responseChance", 10, "Percent chance to generate a response on each request")
 	flag.StringVar(&stateFile, "stateFile", "state", "File to use for maintaining our markov chain state")
 	flag.StringVar(&botUsername, "botUsername", "markov-bot", "The name of the bot when it speaks")
+
+	flag.StringVar(&twitterConsumerKey, "twitterConsumerKey", "", "Twitter API key")
+	flag.StringVar(&twitterConsumerSecret, "twitterConsumerSecret", "", "Twitter API key secret")
+	flag.StringVar(&twitterAccessToken, "twitterAccessToken", "", "Twitter access token")
+	flag.StringVar(&twitterAccessTokenSecret, "twitterAccessTokenSecret", "", "Twitter access token secret")
 
 	var importDir = flag.String("importDir", "", "The directory of a Slack export")
 	var importChan = flag.String("importChan", "", "Optional channel to limit the import to")
@@ -68,6 +79,20 @@ func main() {
 		} else {
 			log.Printf("Loaded previous state from '%s'.", stateFile)
 		}
+	}
+
+	// Optionally create the twitter bridge
+	if twitterConsumerKey != "" && twitterConsumerSecret != "" && twitterAccessToken != "" && twitterAccessTokenSecret != "" {
+		twitterClient = NewTwitter(twitterConsumerKey, twitterConsumerSecret, twitterAccessToken, twitterAccessTokenSecret)
+
+		user, err := twitterClient.GetMe()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		log.Printf("Connected to Twitter as: %s", user.ScreenName)
+	} else {
+		log.Printf("Not enabling twitter support")
 	}
 
 	// Start the webserver
