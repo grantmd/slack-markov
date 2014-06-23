@@ -20,3 +20,4 @@ Tips
 * Export your team's data from https://my.slack.com/services/export, and use that to seed the chain. See the `-importDir` and `-importChan` options.
 * Keep your bot scoped to one channel.
 * Adjust the `-responseChance` option based on your team's activity and how much you want to annoy your co-workers
+* Look into the `-twitter*` options if you enjoy Twitter and slander
