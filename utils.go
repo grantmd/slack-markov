@@ -4,6 +4,14 @@ import (
 	"strings"
 )
 
+var (
+	messageRegex *regexp.Regexp
+)
+
+func init() {
+	messageRegex = regexp.MustCompile(`<([^>]+)>`)
+}
+
 func parseText(text string) string {
 	matches := messageRegex.FindAllStringSubmatch(text, -1)
 	for _, matches2 := range matches {

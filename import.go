@@ -17,14 +17,6 @@ type Message struct {
 	TS   string
 }
 
-var (
-	messageRegex *regexp.Regexp
-)
-
-func init() {
-	messageRegex = regexp.MustCompile(`<([^>]+)>`)
-}
-
 // Start an import from a slack export directory
 // Does some basic error checking then imports the data in the background
 func StartImport(dir *string, channel *string) (err error) {
