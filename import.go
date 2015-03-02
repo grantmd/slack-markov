@@ -58,7 +58,7 @@ func StartImport(dir *string, channel *string) (err error) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Print("Import complete")
+		log.Printf("Import complete. %d suffixes", len(markovChain.Chain))
 	}()
 
 	return nil

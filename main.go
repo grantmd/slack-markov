@@ -77,7 +77,7 @@ func main() {
 			//log.Fatal(err)
 			log.Printf("Could not load from '%s'. This may be expected.", stateFile)
 		} else {
-			log.Printf("Loaded previous state from '%s'.", stateFile)
+			log.Printf("Loaded previous state from '%s' (%d suffixes).", stateFile, len(markovChain.Chain))
 		}
 	}
 
