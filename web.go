@@ -25,13 +25,19 @@ func init() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		incomingText := r.PostFormValue("text")
 		if incomingText != "" && r.PostFormValue("user_id") != "" {
-			log.Printf("Handling incoming request: %s", incomingText)
-			markovChain.Write(incomingText)
+			text := parseText(incomingText)
+			log.Printf("Handling incoming request: %s", text)
+
+			if text != "" {
+				markovChain.Write(text)
+			}
+
+			markovChain.Write(text)
 			go func() {
 				markovChain.Save(stateFile)
 			}()
 
-			if rand.Intn(100) <= responseChance || strings.HasPrefix(incomingText, botUsername) {
+			if rand.Intn(100) <= responseChance || strings.HasPrefix(text, botUsername) {
 				var response WebhookResponse
 				response.Username = botUsername
 				response.Text = markovChain.Generate(numWords)
