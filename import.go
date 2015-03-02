@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
-	"regexp"
 )
 
 type Message struct {
