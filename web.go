@@ -32,7 +32,6 @@ func init() {
 				markovChain.Write(text)
 			}
 
-			markovChain.Write(text)
 			go func() {
 				markovChain.Save(stateFile)
 			}()
