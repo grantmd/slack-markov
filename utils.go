@@ -24,7 +24,7 @@ func parseText(text string) string {
 			parts := strings.SplitN(matches2[1], "|", 2)
 
 			if len(parts) == 2 {
-				text = strings.Replace(text, matches2[0], parts[1], -1)
+				text = strings.Replace(text, matches2[0], "@"+parts[1], -1)
 			} else {
 				text = strings.Replace(text, matches2[0], "", -1)
 			}
@@ -36,7 +36,7 @@ func parseText(text string) string {
 			parts := strings.SplitN(matches2[1], "|", 2)
 
 			if len(parts) == 2 {
-				text = strings.Replace(text, matches2[0], parts[1], -1)
+				text = strings.Replace(text, matches2[0], "#"+parts[1], -1)
 			} else {
 				text = strings.Replace(text, matches2[0], "", -1)
 			}
