@@ -42,13 +42,13 @@ func parseText(text string) string {
 			}
 
 		}
-
-		text = strings.TrimSpace(text)
-
-		text = strings.Replace(text, "&lt;", "<", -1)
-		text = strings.Replace(text, "&gt;", ">", -1)
-		text = strings.Replace(text, "&amp;", "&", -1)
 	}
+
+	text = strings.TrimSpace(text)
+
+	text = strings.Replace(text, "&lt;", "<", -1)
+	text = strings.Replace(text, "&gt;", ">", -1)
+	text = strings.Replace(text, "&amp;", "&", -1)
 
 	return text
 }
