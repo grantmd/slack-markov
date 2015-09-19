@@ -3,6 +3,8 @@ slack-markov
 
 A markov chain bot for [Slack](https://slack.com) written in Go (golang)
 
+[![Build Status](https://travis-ci.org/grantmd/slack-markov.png)](https://travis-ci.org/grantmd/slack-markov)
+
 Usage
 -----
 
