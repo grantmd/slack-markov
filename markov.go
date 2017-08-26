@@ -83,11 +83,11 @@ func (c *Chain) Generate(n int) string {
 }
 
 // Save the chain to a file
-func (c *Chain) Save(fileName string) error {
+func (c *Chain) Save(fileName string) (err error) {
 	// Open the file for writing
 	fo, err := os.Create(fileName)
 	if err != nil {
-		return err
+		return
 	}
 	// close fo on exit and check for its returned error
 	defer func() {
@@ -102,19 +102,15 @@ func (c *Chain) Save(fileName string) error {
 
 	enc := gob.NewEncoder(fo)
 	err = enc.Encode(c)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return
 }
 
 // Load the chain from a file
-func (c *Chain) Load(fileName string) error {
+func (c *Chain) Load(fileName string) (err error) {
 	// Open the file for reading
 	fi, err := os.Open(fileName)
 	if err != nil {
-		return err
+		return
 	}
 	// close fi on exit and check for its returned error
 	defer func() {
@@ -129,9 +125,5 @@ func (c *Chain) Load(fileName string) error {
 
 	dec := gob.NewDecoder(fi)
 	err = dec.Decode(c)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return
 }
