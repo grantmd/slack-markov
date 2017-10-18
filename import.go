@@ -27,10 +27,13 @@ func StartImport(dir *string, channel *string) (err error) {
 		return err
 	}
 
-	// Is there a users.json file?
+	// Is there a users.json or channel.json file?
 	_, err = ioutil.ReadFile(*dir + "/users.json")
 	if err != nil {
-		return err
+		_, err = ioutil.ReadFile(*dir + "/channel.json")
+		if err != nil {
+			return err
+		}
 	}
 
 	// Looks good, import each directory/channel in a goroutine
