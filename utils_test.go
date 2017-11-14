@@ -37,6 +37,11 @@ func TestParseText(t *testing.T) {
 		t.Error("User with name failed")
 	}
 
+	text = parseText("That sounds like something for <@W06CTQTRU|myles>")
+	if text != "That sounds like something for @myles" {
+		t.Error("User with name failed")
+	}
+
 	text = parseText("That sounds like something for <@myles>")
 	if text != "That sounds like something for @myles" {
 		t.Error("User with with no id failed")

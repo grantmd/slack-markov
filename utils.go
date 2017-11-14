@@ -20,7 +20,7 @@ func parseText(text string) string {
 		if strings.HasPrefix(matches2[1], "http") || strings.HasPrefix(matches2[1], "mailto") {
 			text = strings.Replace(text, matches2[0], "", -1)
 
-		} else if strings.HasPrefix(matches2[1], "@U") {
+		} else if strings.HasPrefix(matches2[1], "@U") || strings.HasPrefix(matches2[1], "@W") {
 			parts := strings.SplitN(matches2[1], "|", 2)
 
 			if len(parts) == 2 {
